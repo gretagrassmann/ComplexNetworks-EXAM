@@ -272,4 +272,4 @@ for epoch in range(0, num_epochs):
      print('roc_auc = ', roc_auc)
 
 
-print("Cambiamento a caso")
+print("Cambiamento a caso"  )
