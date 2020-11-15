@@ -1,5 +1,5 @@
 #PROVA
-
+#HO AGGIUNTO IL PATH PER train.cpkl
 import pickle
 import os
 
@@ -9,7 +9,7 @@ tf.disable_v2_behavior()
 
 
 #assumes train.cpkl is placed in a local directory 'data'.
-train_data_file = os.path.join('./data/','train.cpkl')
+train_data_file = os.path.join('.\data_SimpleVersion','train.cpkl')
 
 train_list, train_data = pickle.load(open(train_data_file,'rb'),encoding='latin1')
 print('No of molecules in Training = ', len(train_data))
