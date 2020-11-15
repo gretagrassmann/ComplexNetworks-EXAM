@@ -2,8 +2,14 @@
 
 import pickle
 import os
+
+#These lines are to ensure proper execution of all methods, since most of them are deprecated
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
+
 #assumes train.cpkl is placed in a local directory 'data'.
-train_data_file = os.path.join('train.cpkl')
+train_data_file = os.path.join('./data/','train.cpkl')
 
 train_list, train_data = pickle.load(open(train_data_file,'rb'),encoding='latin1')
 print('No of molecules in Training = ', len(train_data))
@@ -25,29 +31,41 @@ print('--------------------------------------------------')
 print("label = [%d,%d]"%(molecule_pair['label'].shape))
 print(molecule_pair['label'][0:5,:])
 
-import tensorflow as tf
 
 
-in_nv_dims = train_data[0]["l_vertex"].shape[-1]
-in_ne_dims = train_data[0]["l_edge"].shape[-1]
-in_nhood_size = train_data[0]["l_hood_indices"].shape[1]
+in_nv_dims = train_data[0]["l_vertex"].shape[-1]                #numero of vertices
+in_ne_dims = train_data[0]["l_edge"].shape[-1]                  #number of edges
+in_nhood_size = train_data[0]["l_hood_indices"].shape[1]        #number of neighbors
 
-in_vertex1 = tf.compat.v1.placeholder(tf.float32,[None,in_nv_dims],"vertex1")
-in_vertex2 = tf.compat.v1.placeholder(tf.float32,[None,in_nv_dims],"vertex2")
-in_edge1 = tf.compat.v1.placeholder(tf.float32,[None,in_nhood_size,in_ne_dims],"edge1")
-in_edge2 = tf.compat.v1.placeholder(tf.float32,[None,in_nhood_size,in_ne_dims],"edge2")
-in_hood_indices1 = tf.compat.v1.placeholder(tf.int32,[None,in_nhood_size,1],"hood_indices1")
-in_hood_indices2 = tf.compat.v1.placeholder(tf.int32,[None,in_nhood_size,1],"hood_indices2")
+'''Placeholder Creates a 'promise' that some tensors will exist, and gives them specified dimension. I guess it can be thought of as
+pre-allocation of memory(not proper explanation but will work for now)
+Note that this is deprecated hence we've added lines 7-8
+An example of tensor is the following: with non meaningful numbers a tensor of shape [2,3,4] will be
+[    [[0,0,0,0], [1,1,1,1], [2,2,2,2]]
+     [[3,3,3,3], [4,4,4,4], [5,5,5,5]]  ]
+So basically we'll have 2 lists, each containing three lists. Eah of these three lists will contain 4 elements
 
+By declaring None we are telling tenforflow that said tensor will have any dimension grater or equal to 1
+        e.g. in vertex can be of shape (x,in_nv_dims) for any x>1 integer
+'''
+in_vertex1 = tf.placeholder(tf.float32,[None,in_nv_dims],"vertex1")
+in_vertex2 = tf.placeholder(tf.float32,[None,in_nv_dims],"vertex2")
+in_edge1 = tf.placeholder(tf.float32,[None,in_nhood_size,in_ne_dims],"edge1")
+in_edge2 = tf.placeholder(tf.float32,[None,in_nhood_size,in_ne_dims],"edge2")
+in_hood_indices1 = tf.placeholder(tf.int32,[None,in_nhood_size,1],"hood_indices1")
+in_hood_indices2 = tf.placeholder(tf.int32,[None,in_nhood_size,1],"hood_indices2")
+
+examples = tf.placeholder(tf.int32,[None,2],"examples")
+labels = tf.placeholder(tf.float32,[None],"labels")
+dropout_keep_prob = tf.placeholder(tf.float32,shape=[],name="dropout_keep_prob")
+
+
+'''Create a tuple to pass together all the needed inputs'''
 input1 = in_vertex1, in_edge1, in_hood_indices1
 input2 = in_vertex2, in_edge2, in_hood_indices2
 
-examples = tf.compat.v1.placeholder(tf.int32,[None,2],"examples")
-labels = tf.compat.v1.placeholder(tf.float32,[None],"labels")
-dropout_keep_prob = tf.compat.v1.placeholder(tf.float32,shape=[],name="dropout_keep_prob")
 
 import numpy as np
-
 
 def initializer(init, shape):  # helper function to initialize a tensor
     if init == "zero":
@@ -58,7 +76,7 @@ def initializer(init, shape):  # helper function to initialize a tensor
         return tf.random_uniform(shape, minval=-std, maxval=std)
 
 
-def nonlinearity(nl):  # helper function to determine the type of non-linearity
+def nonlinearity(nl): # helper function to determine the type of non-linearity
     if nl == "relu":
         return tf.nn.relu
     elif nl == "tanh":
@@ -70,12 +88,17 @@ def nonlinearity(nl):  # helper function to determine the type of non-linearity
 # the function that defines the ops for graph onvolution.
 def node_average_model(input, params, filters=None, dropout_keep_prob=1.0, trainable=True):
     vertices, edges, nh_indices = input
-    nh_indices = tf.squeeze(nh_indices, axis=2)
-    v_shape = vertices.get_shape()
-    nh_sizes = tf.expand_dims(tf.count_nonzero(nh_indices + 1, axis=1, dtype=tf.float32), -1)
+    nh_indices = tf.squeeze(nh_indices, axis=2)  #Removes axis two of the tensor
+    v_shape = vertices.get_shape()   # get the shape of the vertices tensor which is [None, number of vertices]
+    nh_sizes = tf.expand_dims(tf.count_nonzero(nh_indices + 1, axis=1, dtype=tf.float32), -1)  #computes shape of neigh.
     # for fixed number of neighbors, -1 is a pad value
     if params is None:
-        # create new weights
+        # Check if there are pre-existing weights, if not create new tensors
+        '''The tf.variable method creates tensors in which the values contained are allowed to change as the program
+        runs its course. This is opposed to the tf.constant in which values are fixed throughout
+        Being variable these are all trainable=True which is self explanatory
+        Note that the weights are (number of features) lists each containing filters element
+        '''
         Wc = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wc",
                          trainable=trainable)  # (v_dims, filters)
         Wn = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wn",
@@ -86,18 +109,52 @@ def node_average_model(input, params, filters=None, dropout_keep_prob=1.0, train
         filters = Wc.get_shape()[-1].value
         b = params["b"]
     params = {"Wn": Wn, "Wc": Wc, "b": b}
-    # generate vertex signals
+    '''We are basically creating the main signal by giving the (vertices*W_c + neigh_verts*W_n + bias) into the chosen
+    nonlinear activation function
+    These matrices multiplications are of the following dimensions  (residues,features)*(features,filters) so the final
+    result is (residues, filters). B is a vector of shape filters
+
+    tf.gather(t, elem_shape) picks the elements in elem_shape from tensor (reordering elements if necessary)
+                e.g.   t = [10,9,8,7,6,5,4,3,2,1]  elem_shape =[0,9,6,3]
+                        tf.gather(t,elem_shape)= [10,1,4,7]
+    tf.reduce_sum sums all the elements along a certain axis(in doing so reduces rank of tensor by one)
+                e.g     in our case it sums all the contributions(i.e. filters) for each single node
+                        IT SEEMS TO ME THAT THE RESULT IS THEN A VECTOR OF LENGTH VERTICES
+    tf.maximum gives the maximum value between two tensors elementwise
+    tf.divide performs elementwise division of 2 tensors
+                e.g.   t1= [4,8] t2=[1,4]
+                        tf.divide(t1,t2) = [4,2]
+    Overall Zn then computes the sum of all the information coming from the neighbors and normalizes it with the
+    dimension of the neighborhood
+    '''
+    # generate vertex signals by doing Vertices*Wc so the final dimension will be (None, filters)
     Zc = tf.matmul(vertices, Wc, name="Zc")  # (n_verts, filters)
     # create neighbor signals
     v_Wn = tf.matmul(vertices, Wn, name="v_Wn")  # (n_verts, filters)
     Zn = tf.divide(tf.reduce_sum(tf.gather(v_Wn, nh_indices), 1),
                    tf.maximum(nh_sizes, tf.ones_like(nh_sizes)))  # (n_verts, v_filters)
     nonlin = nonlinearity("relu")
+    '''This operation needs a bit of explaining. The matrices are both of dimension (resides)*(filters) by adding a vector
+    of dim filters we are actually adding the same vector to all rows. This means that sig is a matrix of dimension unchanged
+    '''
     sig = Zn + Zc + b
+    '''Create actual non-linear output. tf.constat is just the instantiation of a tensor whose values won't change
+    during execution. the -1 is a special argument which makes that specific dimension be whatever it needs to be to
+    have the other specified dimensions so if sig is a vector of length residues*filters the -1 forces the whole lenght to
+    be distributed in filters groups(Hence -1 is equivalent to residues in this specific example)
+    tf.reshape just gives to tensor 1 the shape of tensor 2
+    '''
     h = tf.reshape(nonlin(sig), tf.constant([-1, filters]))
     h = tf.nn.dropout(h, dropout_keep_prob)
     return h, params
 
+
+'''Note that each layer uses the params that come from previous layer(indipendently of ligand or receptor nature)
+tf.name_scope is only needed so that the variables defined within the scope have the specified name. It's a tensorflow
+feature that simplifies the visualization of the whole design(with other functions like tensorboard which we don't use)
+At this point the input still has None dimension, maybe later it makes more sense...
+Overall this piece is pretty self explanatory
+'''
 
 #layer 1
 layer_no = 1
@@ -182,6 +239,13 @@ with tf.name_scope("loss"):
     with tf.name_scope("optimizer"):
         # generate an op which trains the model
         train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
+
+'''The feed_dict is a structure that needs to be fed into the tf session to have it compile. Before we've created
+promises(the placeholders) which are now being fullfilled. So we are telling the program what data goes in each placeholder.
+The l_vertex index of the data has shape [185,70] so 185 residues with 70 features each. The None we've defined in the
+placeholders then should become 185 for the first molecule pair(it's none because probably different molecule pairs have
+different numbers of residues)
+'''
 
 def build_feed_dict(minibatch):
    feed_dict = {
@@ -272,6 +336,3 @@ for epoch in range(0, num_epochs):
      roc_auc = auc(fpr, tpr)
      print('mean loss = ', np.mean(all_losses))
      print('roc_auc = ', roc_auc)
-
-
-print("Cambiamento a caso"  )
