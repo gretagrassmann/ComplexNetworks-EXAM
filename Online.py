@@ -9,7 +9,7 @@ tf.disable_v2_behavior()
 
 
 #assumes train.cpkl is placed in a local directory 'data'.
-train_data_file = os.path.join('.\data_SimpleVersion','train.cpkl')
+train_data_file = os.path.join('C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion','train.cpkl')
 
 train_list, train_data = pickle.load(open(train_data_file,'rb'),encoding='latin1')
 print('No of molecules in Training = ', len(train_data))
@@ -33,9 +33,9 @@ print(molecule_pair['label'][0:5,:])
 
 
 
-in_nv_dims = train_data[0]["l_vertex"].shape[-1]                #numero of vertices
-in_ne_dims = train_data[0]["l_edge"].shape[-1]                  #number of edges
-in_nhood_size = train_data[0]["l_hood_indices"].shape[1]        #number of neighbors
+in_nv_dims = train_data[0]["l_vertex"].shape[-1]
+in_ne_dims = train_data[0]["l_edge"].shape[-1]
+in_nhood_size = train_data[0]["l_hood_indices"].shape[1]
 
 '''Placeholder Creates a 'promise' that some tensors will exist, and gives them specified dimension. I guess it can be thought of as
 pre-allocation of memory(not proper explanation but will work for now)
@@ -89,7 +89,7 @@ def nonlinearity(nl): # helper function to determine the type of non-linearity
 def node_average_model(input, params, filters=None, dropout_keep_prob=1.0, trainable=True):
     vertices, edges, nh_indices = input
     nh_indices = tf.squeeze(nh_indices, axis=2)  #Removes axis two of the tensor
-    v_shape = vertices.get_shape()   # get the shape of the vertices tensor which is [None, number of vertices]
+    v_shape = vertices.get_shape()   # get the shape of the vertices tensor which is [None, features of vertices]
     nh_sizes = tf.expand_dims(tf.count_nonzero(nh_indices + 1, axis=1, dtype=tf.float32), -1)  #computes shape of neigh.
     # for fixed number of neighbors, -1 is a pad value
     if params is None:
@@ -100,9 +100,9 @@ def node_average_model(input, params, filters=None, dropout_keep_prob=1.0, train
         Note that the weights are (number of features) lists each containing filters element
         '''
         Wc = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wc",
-                         trainable=trainable)  # (v_dims, filters)
+                         trainable=trainable)  # (v_features_dims, filters)
         Wn = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wn",
-                         trainable=trainable)  # (v_dims, filters)
+                         trainable=trainable)  # (v_features_dims, filters)
         b = tf.Variable(initializer("zero", (filters,)), name="b", trainable=trainable)
     else:
         Wn, Wc = params["Wn"], params["Wc"]
