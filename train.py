@@ -39,7 +39,7 @@ if __name__=='__main__':
      sess.run(tf.initialize_all_variables())
      print("Training Model")
 
-    f = open("avg_loss_train.txt","a")
+    f = open("avg_loss_train_EDGE.txt","a")
      for epoch in range(0, num_epochs):
        """
        Trains model for one pass through training data, one protein at a time
