@@ -39,6 +39,7 @@ if __name__=='__main__':
      sess.run(tf.initialize_all_variables())
      print("Training Model")
 
+    f = open("avg_loss_train.txt","a")
      for epoch in range(0, num_epochs):
        """
        Trains model for one pass through training data, one protein at a time
@@ -77,6 +78,10 @@ if __name__=='__main__':
           #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
        ckptfile = saver.save(sess, './saved_models/model_%d.ckpt'%(epoch))
+       s = str(avg_loss/ii)
+       f.write(s+"\n")
+
+     f.close()
 
      all_preds = []
      all_labels = []
