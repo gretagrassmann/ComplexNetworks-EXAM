@@ -1,11 +1,12 @@
 #WITH EDGES
 import numpy as np
 import tensorflow as tf
-
+from defs import *
+'''
 num_epochs =  5
 minibatch_size = 128
 dropout_keep = 0.5
-
+'''
 
 def initializer(init, shape):
     if init == "zero":

@@ -5,7 +5,7 @@ THE NEEDED MODIFICATIONS ARE THE FOLLOWING:
                             lines 15-19 train.py
                             lines 5-8 avg_loss_plot.py
                             lines 13-19 test.py
-                            lines 167-170 graph_conv.py
+                            lines 5-9 and lines 167-170 graph_conv.py
 '''
 import os
 
@@ -26,7 +26,7 @@ test_data_file = os.path.join('.\data_SimpleVersion', 'test.cpkl')
 no_edge = "./avg_loss_train.txt"
 edge = "./avg_loss_train_EDGE.txt"
 
-'''THESE LINES NEED TO BE UNCOMMENTED IF GRETA IS USING THIS'''
+'''THESE LINES NEED TO BE UNCOMMENTED IF GRETA IS USING THIS()'''
 '''
 train_data_file = os.path.join(
     'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
