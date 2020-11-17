@@ -2,6 +2,10 @@
 import numpy as np
 import tensorflow as tf
 
+num_epochs =  5
+minibatch_size = 128
+dropout_keep = 0.5
+
 
 def initializer(init, shape):
     if init == "zero":
@@ -95,11 +99,6 @@ def build_feed_dict(model_variables_list, minibatch):
    }
    return feed_dict
 
-num_epochs =  5
-minibatch_size = 128
-dropout_keep = 0.5
-
-
 def build_graph_conv_model(in_nv_dims, in_ne_dims, in_nhood_size):
     in_vertex1 = tf.placeholder(tf.float32,[None,in_nv_dims],"vertex1")
     in_vertex2 = tf.placeholder(tf.float32,[None,in_nv_dims],"vertex2")
@@ -165,10 +164,10 @@ def build_graph_conv_model(in_nv_dims, in_ne_dims, in_nhood_size):
         preds = average_predictions(input)
 
     return [in_vertex1, in_edge1, in_hood_indices1, in_vertex2, in_edge2, in_hood_indices2, examples, preds,labels, dropout_keep_prob]
-
+'''
 pn_ratio = 0.1
 learning_rate = 0.05
-
+'''
 def loss_op(preds, labels):
    # Loss and optimizer
    with tf.name_scope("loss"):

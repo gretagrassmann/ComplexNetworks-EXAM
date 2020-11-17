@@ -6,15 +6,17 @@ import os
 import pickle
 import copy
 from sklearn.metrics import roc_curve, auc, average_precision_score
-#from defs import *
+from defs import *
 from graph_conv import *
 
 if __name__=='__main__':
 
   #load the training data
+  '''
   train_data_file = os.path.join(
-      'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
+      '.\data_SimpleVersion',
       'train.cpkl')
+      '''
 #  train_list, train_data = cPickle.load(open(train_data_file))
   train_list, train_data = pickle.load(open(train_data_file, 'rb'), encoding='latin1')
 
@@ -37,7 +39,7 @@ if __name__=='__main__':
      # set up tensorflow session
      #sess.run(tf.global_variables_initializer())
      sess.run(tf.initialize_all_variables())
-     print("Training Model")
+     print("Training Model with edges")
 
      f = open("avg_loss_train_EDGE.txt","a")
      for epoch in range(0, num_epochs):
