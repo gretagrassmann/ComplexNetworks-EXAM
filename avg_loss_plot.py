@@ -1,7 +1,8 @@
-<<<<<<< HEAD
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from defs import *
+sns.set()
 '''
 no_edge = "./avg_loss_train.txt"
 edge = "./avg_loss_train_EDGE.txt"
