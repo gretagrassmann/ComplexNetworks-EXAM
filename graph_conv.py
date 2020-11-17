@@ -98,8 +98,8 @@ def build_feed_dict(model_variables_list, minibatch):
         dropout_keep_prob: dropout_keep
     }
     return feed_dict
-
-num_epochs =  100 #change this while real training.
+ 
+num_epochs =  5 #change this while real training.
 minibatch_size = 128
 dropout_keep = 0.5
 
