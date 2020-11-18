@@ -6,22 +6,24 @@ import os
 import pickle
 import copy
 from sklearn.metrics import roc_curve, auc, average_precision_score
-#from defs import *
+from defs import *
 from graph_conv import *
 
 if __name__=='__main__':
 
   #load the training data
+  '''
   train_data_file = os.path.join(
-      'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
+      '.\data_SimpleVersion',
       'train.cpkl')
+      '''
 #  train_list, train_data = cPickle.load(open(train_data_file))
   train_list, train_data = pickle.load(open(train_data_file, 'rb'), encoding='latin1')
 
   in_nv_dims = train_data[0]["l_vertex"].shape[-1]
   in_ne_dims = train_data[0]["l_edge"].shape[-1]
   in_nhood_size = train_data[0]["l_hood_indices"].shape[1]
- 
+
   model_variables_list = build_graph_conv_model(in_nv_dims, in_ne_dims, in_nhood_size)
   in_vertex1, in_edge1, in_hood_indices1, in_vertex2, in_edge2, in_hood_indices2, examples, preds,labels, dropout_keep_prob = model_variables_list
 
@@ -30,14 +32,14 @@ if __name__=='__main__':
   with tf.name_scope("optimizer"):
       # generate an op which trains the model
       train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
-   
+
   saver = tf.train.Saver(max_to_keep=250)
 
   with tf.Session() as sess:
      # set up tensorflow session
      #sess.run(tf.global_variables_initializer())
      sess.run(tf.initialize_all_variables())
-     print("Training Model")
+     print("Training Model with edges")
 
      f = open("avg_loss_train_EDGE.txt","a")
      for epoch in range(0, num_epochs):
@@ -74,7 +76,7 @@ if __name__=='__main__':
              #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
              avg_loss += loss_v
              ii += 1
-          nn += n    
+          nn += n
           #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
        ckptfile = saver.save(sess, './saved_models/model_%d.ckpt'%(epoch))
@@ -93,7 +95,7 @@ if __name__=='__main__':
        batch_split_points = np.arange(0,n,minibatch_size)[1:]
        batches = np.array_split(prot_data['label'],batch_split_points)
        for a_batch in batches:
-          temp_data['label'] = a_batch     
+          temp_data['label'] = a_batch
           feed_dict = build_feed_dict(model_variables_list, temp_data)
           res = sess.run([loss,preds,labels], feed_dict=feed_dict)
           pred_v = np.squeeze(res[1])
@@ -110,4 +112,3 @@ if __name__=='__main__':
      roc_auc = auc(fpr, tpr)
      print('mean loss = ',np.mean(all_losses))
      print('roc_auc = ',roc_auc)
-

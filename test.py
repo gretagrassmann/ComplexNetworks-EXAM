@@ -10,25 +10,27 @@ from graph_conv import *
 import time
 start_time = time.time()
 if __name__=='__main__':
-
+    '''
   #model_num = int(sys.argv[1])
   model_num = 99
   #load the testing data
+
   test_data_file = os.path.join(
-      'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
+      '.\data_SimpleVersion',
       'test.cpkl')
+      '''
   test_list, test_data = pickle.load(open(test_data_file, 'rb'), encoding='latin1')
 #  test_list, test_data = cPickle.load(open(test_data_file))
 
   in_nv_dims = test_data[0]["l_vertex"].shape[-1]
   in_ne_dims = test_data[0]["l_edge"].shape[-1]
   in_nhood_size = test_data[0]["l_hood_indices"].shape[1]
- 
+
   model_variables_list = build_graph_conv_model(in_nv_dims, in_ne_dims, in_nhood_size)
   in_vertex1, in_edge1, in_hood_indices1, in_vertex2, in_edge2, in_hood_indices2, examples, preds,labels, dropout_keep_prob = model_variables_list
 
   loss = loss_op(preds, labels)
-   
+
   saver = tf.train.Saver()
   with tf.Session() as sess:
      # set up tensorflow session
@@ -49,7 +51,7 @@ if __name__=='__main__':
        batch_split_points = np.arange(0,n,minibatch_size)[1:]
        batches = np.array_split(prot_data['label'],batch_split_points)
        for a_batch in batches:
-         temp_data['label'] = a_batch     
+         temp_data['label'] = a_batch
          feed_dict = build_feed_dict(model_variables_list, temp_data)
          res = sess.run([loss,preds,labels], feed_dict=feed_dict)
          pred_v = np.squeeze(res[1])
