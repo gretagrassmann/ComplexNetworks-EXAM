@@ -94,11 +94,11 @@ def build_feed_dict(model_variables_list, minibatch):
         dropout_keep_prob: dropout_keep
     }
     return feed_dict
-
-num_epochs =  1 #change this while real training.
+'''
+num_epochs =  150 #change this while real training.
 minibatch_size = 128
 dropout_keep = 0.5
-
+'''
 
 def build_graph_conv_model(in_nv_dims, in_ne_dims, in_nhood_size):
     in_vertex1 = tf.placeholder(tf.float32,[None,in_nv_dims],"vertex1")
