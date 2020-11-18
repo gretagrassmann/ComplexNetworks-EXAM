@@ -8,6 +8,8 @@ import copy
 from sklearn.metrics import roc_curve, auc, average_precision_score
 from defs import *
 from graph_conv import *
+'''Uncomment following line if you want to train the version with parameters not shared. ALSO CHECK DIRECTORY OF MODEL SAVING AND TXT FILE'''
+#from graph_conv_NotShared import *
 
 if __name__=='__main__':
 
@@ -79,7 +81,7 @@ if __name__=='__main__':
           nn += n
           #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
-       ckptfile = saver.save(sess, './saved_models/model_%d.ckpt'%(epoch))
+       ckptfile = saver.save(sess, './saved_models_Edges_NotShared/model_%d.ckpt'%(epoch))
        s = str(avg_loss/ii)
        f.write(s+"\n")
 

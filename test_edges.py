@@ -8,6 +8,8 @@ from sklearn.metrics import roc_curve, auc, average_precision_score
 from defs import *
 from graph_conv import *
 import time
+'''Uncomment following line if you want to train the version with parameters not shared. ALSO CHECK DIRECTORY OF MODEL SAVING AND TXT FILE'''
+#from graph_conv_NotShared import *
 
 start_time = time.time()
 if __name__=='__main__':
