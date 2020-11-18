@@ -13,12 +13,14 @@ import os
 num_epochs =  150
 minibatch_size = 128
 dropout_keep = 0.5
+filters_number = 256
 #PARAMETERS FOR LOSS
 pn_ratio = 0.1
 learning_rate = 0.05
 
 #PARAMETERS FOR TESTING
-model_list = [0,29,59,89,119,149]
+model_num = 0
+model_list = [29,49,89,119,149]
 
 '''THESE LINES NEED TO BE UNCOMMENTED FOR GENERAL USE'''
 train_data_file = os.path.join('.\data_SimpleVersion', 'train.cpkl')
