@@ -11,7 +11,7 @@ with open(edge) as textFile:
     data1 = textFile.read().split()          # split based on spaces
     data1 = [float(point) for point in data1] # convert strings to floats
 
-x = np.arange(1,len(data)+1)
+x = np.arange(1,int(len(data)+1))
 
 fig = plt.figure()
 ax = plt.subplot(111)
