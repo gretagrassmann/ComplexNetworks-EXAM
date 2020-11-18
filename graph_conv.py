@@ -95,7 +95,7 @@ def build_feed_dict(model_variables_list, minibatch):
    }
    return feed_dict
 
-num_epochs =  5
+num_epochs = 150
 minibatch_size = 128
 dropout_keep = 0.5
 
