@@ -18,7 +18,7 @@ pn_ratio = 0.1
 learning_rate = 0.05
 
 #PARAMETERS FOR TESTING
-model_num = 149
+model_list = [0,29,59,89,119,149]
 
 '''THESE LINES NEED TO BE UNCOMMENTED FOR GENERAL USE'''
 train_data_file = os.path.join('.\data_SimpleVersion', 'train.cpkl')
