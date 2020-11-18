@@ -12,7 +12,7 @@ start_time = time.time()
 if __name__=='__main__':
 
   #model_num = int(sys.argv[1])
-  model_num = 0
+  model_num = 149
   #load the testing data
   test_data_file = os.path.join(
       'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
@@ -73,7 +73,7 @@ if __name__=='__main__':
      with open("Testing_loss_noedge.txt","a+") as f:
          if model_num == 0:
              f.write('Average loss, model number, roc_auc \n')
-         f.write(str(np.mean(all_losses))+','+ str(model_num)+str(roc_auc)+"\n") 
+         f.write(str(np.mean(all_losses))+','+ str(model_num)+','+str(roc_auc)+"\n")
 
 
 print("My program took", time.time() - start_time, "to run")
