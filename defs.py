@@ -27,7 +27,7 @@ train_data_file = os.path.join('.\data_SimpleVersion', 'train.cpkl')
 test_data_file = os.path.join('.\data_SimpleVersion', 'test.cpkl')
 no_edge = "./avg_loss_train.txt"
 edge = "./avg_loss_train_EDGE.txt"
-no_edge_test = "./Testing_loss_noedge.txt"
+no_edge_test = "./CONTROL_Testing_loss_noedge.txt"
 edge_test = "./Testing_loss.txt"
 
 '''THESE LINES NEED TO BE UNCOMMENTED IF GRETA IS USING THIS()'''
