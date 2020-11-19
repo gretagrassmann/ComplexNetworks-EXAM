@@ -6,8 +6,8 @@ import pickle
 import copy
 from sklearn.metrics import roc_curve, auc, average_precision_score
 
-
-# from defs import *
+print("NO EDGES USED")
+#from defs import *
 
 def initializer(init, shape):
     if init == "zero":
@@ -184,4 +184,3 @@ def loss_op(preds, labels):
         loss = tf.losses.softmax_cross_entropy(labels_stacked, logits, weights=scale_vector)
         return loss
 
-print("NO EDGES USED")    
