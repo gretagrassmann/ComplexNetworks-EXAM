@@ -9,7 +9,7 @@ from sklearn.metrics import roc_curve, auc, average_precision_score
 #from defs import *
 from graph_conv import *
 
-print("NO EDGES USED AND SAVED AS CONTROL")
+print("NO EDGES USED AND SAVED AS 300")
 if __name__=='__main__':
 
 
@@ -32,16 +32,17 @@ if __name__=='__main__':
       # generate an op which trains the model
       train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
-  saver = tf.train.Saver(max_to_keep=250)
-
+  saver = tf.train.Saver(max_to_keep=310)
+  restart_train_from = 149
   with tf.Session() as sess:
      # set up tensorflow session
-     #sess.run(tf.global_variables_initializer())
      sess.run(tf.initialize_all_variables())
-     print("Training Model without edges")
+     #saver.restore(sess, "C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\ComplexNetworks2\\saved_models\\model_%d.ckpt" % (restart_train_from))
+     print("train from model %d" %(restart_train_from))
 
-     f = open("CONTROL_avg_loss_train.txt","a")
+     f = open("avg_loss_train.txt","a")
      for epoch in range(0, num_epochs):
+
        """
        Trains model for one pass through training data, one protein at a time
        Each protein is split into minibatches of paired examples.
@@ -72,13 +73,11 @@ if __name__=='__main__':
              # train the model
              feed_dict = build_feed_dict(model_variables_list, minibatch)
              _,loss_v = sess.run([train_op,loss], feed_dict=feed_dict)
-             #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
              avg_loss += loss_v
              ii += 1
           nn += n
-          #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
-       ckptfile = saver.save(sess, './CONTROL_saved_models/CONTROL_model_%d.ckpt'%(epoch))
+       ckptfile = saver.save(sess, './saved_models/model_%d.ckpt'%(epoch))
        s = str(avg_loss/ii)
        f.write(s+"\n")
 
