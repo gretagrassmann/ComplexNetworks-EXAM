@@ -12,14 +12,12 @@ start_time = time.time()
 print("NO EDGE USED")
 if __name__=='__main__':
 
-  #model_num = int(sys.argv[1])
   model_num = 89
   #load the testing data
   test_data_file = os.path.join(
       'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
       'test.cpkl')
   test_list, test_data = pickle.load(open(test_data_file, 'rb'), encoding='latin1')
-#  test_list, test_data = cPickle.load(open(test_data_file))
 
   in_nv_dims = test_data[0]["l_vertex"].shape[-1]
   in_ne_dims = test_data[0]["l_edge"].shape[-1]
@@ -33,8 +31,8 @@ if __name__=='__main__':
   saver = tf.train.Saver()
   with tf.Session() as sess:
      # set up tensorflow session
-     saver.restore(sess, './CONTROL_saved_models/CONTROL_model_%d.ckpt'%(model_num))
-     print(" Using CONTROL model %d "%(model_num)," for testing %d proteins"%(len(test_data)))
+     saver.restore(sess, './saved_models/model_%d.ckpt'%(model_num))
+     print(" Using model %d "%(model_num)," for testing %d proteins"%(len(test_data)))
 
      all_preds = []
      all_labels = []
@@ -71,7 +69,7 @@ if __name__=='__main__':
      roc_auc = auc(fpr, tpr)
      print('test mean loss = ',np.mean(all_losses))
      print('test roc_auc = ',roc_auc)
-     with open("CONTROL_Testing_loss_noedge.txt","a+") as f:
+     with open("Testing_loss_noedge.txt","a+") as f:
          if model_num == 0:
              f.write('Average loss, model number, roc_auc \n')
          f.write(str(np.mean(all_losses))+','+ str(model_num)+','+str(roc_auc)+"\n")
