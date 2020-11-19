@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-no_edge = "C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\ComplexNetworks2\\avg_loss_train.txt"
+no_edge = "C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\ComplexNetworks2\\CONTROL_avg_loss_train.txt"
 edge = "C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\ComplexNetworks2\\avg_loss_train_EDGE.txt"
+
 # Import data as a list of numbers
 with open(no_edge) as textFile:
     data = textFile.read().split()          # split based on spaces
