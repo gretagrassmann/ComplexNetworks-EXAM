@@ -6,17 +6,16 @@ import os
 import pickle
 import copy
 from sklearn.metrics import roc_curve, auc, average_precision_score
-from defs import *
+#from defs import *
 from graph_conv import *
 
+print("NO EDGES USED AND SAVED AS CONTROL")
 if __name__=='__main__':
 
-  #load the training data
-  '''
-  train_data_file = os.path.join(
-      '.\data_SimpleVersion',
+
+  train_data_file = os.path.join( 'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
       'train.cpkl')
-      '''
+
 #  train_list, train_data = cPickle.load(open(train_data_file))
   train_list, train_data = pickle.load(open(train_data_file, 'rb'), encoding='latin1')
 
@@ -41,7 +40,7 @@ if __name__=='__main__':
      sess.run(tf.initialize_all_variables())
      print("Training Model without edges")
 
-     f = open("avg_loss_train.txt","a")
+     f = open("CONTROL_avg_loss_train.txt","a")
      for epoch in range(0, num_epochs):
        """
        Trains model for one pass through training data, one protein at a time
@@ -79,7 +78,7 @@ if __name__=='__main__':
           nn += n
           #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
-       ckptfile = saver.save(sess, './saved_models/model_%d.ckpt'%(epoch))
+       ckptfile = saver.save(sess, './CONTROL_saved_models/CONTROL_model_%d.ckpt'%(epoch))
        s = str(avg_loss/ii)
        f.write(s+"\n")
 
@@ -112,3 +111,5 @@ if __name__=='__main__':
      roc_auc = auc(fpr, tpr)
      print('mean loss = ',np.mean(all_losses))
      print('roc_auc = ',roc_auc)
+
+
