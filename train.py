@@ -33,12 +33,12 @@ if __name__=='__main__':
       train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
   saver = tf.train.Saver(max_to_keep=310)
-  restart_train_from = 149
+  #restart_train_from = 149
   with tf.Session() as sess:
      # set up tensorflow session
      sess.run(tf.initialize_all_variables())
      #saver.restore(sess, "C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\ComplexNetworks2\\saved_models\\model_%d.ckpt" % (restart_train_from))
-     print("train from model %d" %(restart_train_from))
+     print("train model without edges")
 
      f = open("avg_loss_train.txt","a")
      for epoch in range(0, num_epochs):
