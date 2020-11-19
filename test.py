@@ -5,7 +5,7 @@ import sys
 import pickle
 import copy
 from sklearn.metrics import roc_curve, auc, average_precision_score
-from defs import *
+#from defs import *
 from graph_conv import *
 import time
 start_time = time.time()
@@ -13,7 +13,7 @@ print("NO EDGE USED")
 if __name__=='__main__':
 
   #model_num = int(sys.argv[1])
-  model_num = 0
+  model_num = 89
   #load the testing data
   test_data_file = os.path.join(
       'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
