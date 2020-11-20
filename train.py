@@ -1,3 +1,4 @@
+#SIGMOIDAL FUNCTION BRANCH
 import tensorflow as tf
 import numpy as np
 import os
@@ -9,7 +10,6 @@ from sklearn.metrics import roc_curve, auc, average_precision_score
 #from defs import *
 from graph_conv import *
 
-print("NO EDGES USED AND SAVED AS 300")
 if __name__=='__main__':
 
 
@@ -40,7 +40,7 @@ if __name__=='__main__':
      #saver.restore(sess, "C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\ComplexNetworks2\\saved_models\\model_%d.ckpt" % (restart_train_from))
      print("train model without edges")
 
-     f = open("avg_loss_train.txt","a")
+     f = open("Sigmoidal_avg_loss_train.txt","a")
      for epoch in range(0, num_epochs):
 
        """
@@ -77,7 +77,7 @@ if __name__=='__main__':
              ii += 1
           nn += n
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
-       ckptfile = saver.save(sess, './saved_models/model_%d.ckpt'%(epoch))
+       ckptfile = saver.save(sess, './sigmoidal_saved_models/model_%d.ckpt'%(epoch))
        s = str(avg_loss/ii)
        f.write(s+"\n")
 
