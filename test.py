@@ -1,3 +1,4 @@
+#SIGMOIDAL FUNCTION BRANCH
 import tensorflow as tf
 import numpy as np
 import os
@@ -13,7 +14,7 @@ print("NO EDGE USED")
 if __name__=='__main__':
 
   #model_num = 44
-  n = [298]
+  n = [0,29,34,39,44,49,54,59,64,69,79,89,99,109,119,129,139,149]
   #load the testing data
   test_data_file = os.path.join(
       'C:\\Users\\Cobal\\Desktop\\ComplexNetworksEXAM\\Graph_convolution_with_proteins-master\\data_SimpleVersion',
@@ -33,7 +34,7 @@ if __name__=='__main__':
   with tf.Session() as sess:
      # set up tensorflow session
      for model_num in n:
-         saver.restore(sess, './saved_models/model_%d.ckpt'%(model_num))
+         saver.restore(sess, './sigmoidal_saved_models/model_%d.ckpt'%(model_num))
          print(" Using model %d "%(model_num)," for testing %d proteins"%(len(test_data)))
 
          all_preds = []
@@ -71,11 +72,10 @@ if __name__=='__main__':
          roc_auc = auc(fpr, tpr)
          print('test mean loss = ',np.mean(all_losses))
          print('test roc_auc = ',roc_auc)
-         with open("CYCLE_Testing_loss_noedge.txt","a+") as f:
+         with open("Sigmoidal_Testing_loss_noedge.txt","a+") as f:
              if model_num == 0:
                  f.write('Average loss, model number, roc_auc \n')
              f.write(str(np.mean(all_losses))+','+ str(model_num)+','+str(roc_auc)+"\n")
 
 
 print("My program took", time.time() - start_time, "to run")
-print("NO EDGES USED")    
