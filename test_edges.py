@@ -32,7 +32,7 @@ if __name__=='__main__':
     in_vertex1, in_edge1, in_hood_indices1, in_vertex2, in_edge2, in_hood_indices2, examples, preds,labels, dropout_keep_prob = model_variables_list
 
     loss = loss_op(preds, labels)
-    print('Comincio il testing in batch')
+    print('Comincio il testing in batch, ho modificato la lista non preoccuparti')
 
     saver = tf.train.Saver()
     with tf.Session() as sess:
@@ -74,11 +74,11 @@ if __name__=='__main__':
             roc_auc = auc(fpr, tpr)
             print('test mean loss = ',np.mean(all_losses))
             print('test roc_auc = ',roc_auc)
-            time = time.time() - start_time
-            print("This specific run of the test took", time, "to run")
+            time_spent = time.time() - start_time
+            print("This specific run of the test took", time_spent, "to run")
             with open('Testing_loss.txt','a+') as f:
                 if model_num == 0:
                     f.write('Average loss, model number, roc_auc, time needed for testing[s] \n')
-                f.write(str(np.mean(all_losses)) + ', '+ str(model_num)+ ', ' + str(roc_auc) + str(time) + ', ' + "\n")
+                f.write(str(np.mean(all_losses)) + ', '+ str(model_num)+ ', ' + str(roc_auc) + "\n")
 
 print("My program took", time.time() - start_time, "to run")

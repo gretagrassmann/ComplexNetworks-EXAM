@@ -35,16 +35,17 @@ if __name__=='__main__':
       # generate an op which trains the model
       train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
-  saver = tf.train.Saver(max_to_keep=250)
+  saver = tf.train.Saver(max_to_keep=300)
 
   with tf.Session() as sess:
      # set up tensorflow session
      #sess.run(tf.global_variables_initializer())
-     sess.run(tf.initialize_all_variables())
-     print("Training Model with edges")
+     #sess.run(tf.initialize_all_variables())
+     saver.restore(sess, './saved_models_Edges/model_%d.ckpt'%(restart_train_from))
+     print("Training Model with edges from model %d"%(restart_train_from))
 
 
-     for epoch in range(0, num_epochs):
+     for epoch in range(restart_train_from, restart_train_from + num_epochs):
        """
        Trains model for one pass through training data, one protein at a time
        Each protein is split into minibatches of paired examples.
@@ -82,10 +83,9 @@ if __name__=='__main__':
           #print("Epoch =",epoch," iter = ",ii," loss = ",loss_v)
        print("Epoch_end =",epoch,", avg_loss = ",avg_loss/ii," nn = ",nn)
        ckptfile = saver.save(sess, './saved_models_Edges_NotShared/model_%d.ckpt'%(epoch))
-       f = open("avg_loss_train_EDGE.txt","a")
-       s = str(avg_loss/ii)
-       f.write(s+"\n")
-       f.close()
+       with open("avg_loss_train_EDGE.txt","a") as f:
+           s = str(avg_loss/ii)
+           f.write(s + "\n")
 
 
      all_preds = []
