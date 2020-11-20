@@ -1,3 +1,4 @@
+#SIGMOIDAL FUNCTION BRANCH
 import tensorflow as tf
 import numpy as np
 import os
